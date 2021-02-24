@@ -36,9 +36,9 @@ class CategorieController extends Controller
     {
         $cat = new Categorie();
         if (Auth::user()->can('update', $cat)) {
-            return view('categorie.create');
+            return response()->json();
         }
-        return redirect()->route('home')->with('danger', 'Vous ne pouvez pas effectuer cette action');
+        return response()->json(null,401);
     }
 
     /**
