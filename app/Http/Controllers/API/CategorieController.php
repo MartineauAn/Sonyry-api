@@ -77,7 +77,7 @@ class CategorieController extends Controller
     public function destroy($id)
     {
         $categorie = Categorie::find($id);
-
+        //dd($categorie);
         if (Auth::user()->can('delete', $categorie)) {
 
             if (count($categorie->topics) > 0) {
@@ -100,9 +100,9 @@ class CategorieController extends Controller
 
             $categorie->delete();
 
-            return redirect()->route('categorie.index');
+            return response()->json();
         }
 
-        return redirect()->route('home')->with('danger', 'Vous ne pouvez pas effectuer cette action');
+        return response()->json(null,401);
     }
 }

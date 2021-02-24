@@ -54,7 +54,7 @@ Route::middleware('jwt.auth')->group(function (){
     Route::get('categorie/index', [CategorieController::class,'index']);
     Route::get('categorie/create',[CategorieController::class,'create']);
     Route::post('categorie/store', [CategorieController::class,'store']);
-    Route::get('categorie/{id}/destroy',[CategorieController::class,'destroy']);
+    Route::delete('categorie/{id}/destroy',[CategorieController::class,'destroy']);
 
 });
 
