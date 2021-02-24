@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategorieController;
 use App\Http\Controllers\API\CommentController;
+use App\Http\Controllers\API\ProfilController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,16 @@ Route::middleware('jwt.auth')->group(function (){
      */
     Route::post('/comments/{id}/store', [CommentController::class,'store']);
     Route::post('/commentReply/{id}/storeCommentReply', [CommentController::class,'storeCommentReply']);
+
+    /**
+     * PROFIL ROUTES
+     */
+    Route::get('/profil',[ProfilController::class,'index']);
+    Route::put('/profil/{id}/update',[ProfilController::class,'update']);
+    Route::get('/profil/group/{id}/exit',[UserGroupController::class,'destroy']);
+    Route::get('/profil/friend/{id}/destroy',[FriendController::class,'destroy']);
+    Route::get('/profil/friend/{id}/add', [FriendController::class,'add']);
+    Route::get('/profil/friend/{id}/request',[FriendController::class,'request']);
 
 });
 
