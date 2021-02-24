@@ -63,6 +63,7 @@ Route::middleware('jwt.auth')->group(function (){
      * BLOCS ROUTES
      */
     Route::get('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'index']);
+    Route::put('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'update']);
     Route::post('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'store']);
     //Route::apiResource('blocs',\App\Http\Controllers\API\BlocController::class);
 

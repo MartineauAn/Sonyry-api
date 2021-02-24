@@ -165,7 +165,24 @@ class BlocController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $bloc = Bloc::find($id);
+
+        if (Auth::user()->can('update', $bloc)) {
+            if ($request->input('title')) {
+                $bloc->title = $request->input('title');
+            } elseif ($request->input('content')) {
+                $bloc->content = $request->input('content');
+            }
+
+            $bloc->save();
+
+            $bloc->page;
+
+            return response()->json($bloc);
+        }
+
+        return response()->json(null , 401);
+
     }
 
     /**
