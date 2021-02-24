@@ -46,6 +46,9 @@ Route::middleware('jwt.auth')->group(function (){
     route::get('topics/{id}/edit',[\App\Http\Controllers\API\TopicController::class,'edit']);
 
 
+    Route::get('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'index']);
+    Route::post('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'store']);
+    //Route::apiResource('blocs',\App\Http\Controllers\API\BlocController::class);
 
 });
 
