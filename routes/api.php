@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CategorieController;
+use App\Http\Controllers\API\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +56,12 @@ Route::middleware('jwt.auth')->group(function (){
     Route::get('categorie/create',[CategorieController::class,'create']);
     Route::post('categorie/store', [CategorieController::class,'store']);
     Route::delete('categorie/{id}/destroy',[CategorieController::class,'destroy']);
+
+    /**
+     * COMMENTS ROUTES
+     */
+    Route::post('/comments/{id}/store', [CommentController::class,'store']);
+    Route::post('/commentReply/{id}/storeCommentReply', [CommentController::class,'storeCommentReply']);
 
 });
 

@@ -76,6 +76,13 @@ class TopicController extends Controller
         $topic = Topic::find($id);
         $topic->user;
         $topic->comments;
+        foreach($topic->comments as $comment) {
+            $comment->user;
+            $comment->comments;
+            foreach ($comment->comments as $replyComment){
+                $replyComment->user;
+            }
+        }
 
         return response()->json([
             'topic' => $topic
