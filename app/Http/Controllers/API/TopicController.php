@@ -6,6 +6,7 @@ use App\Models\Categorie;
 use App\Http\Controllers\Controller;
 use App\Models\Topic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TopicController extends Controller
 {
@@ -59,8 +60,9 @@ class TopicController extends Controller
         $topic->title = $request->input('title');
         $topic->categorie_id = $request->input('categorie_id');
         $topic->user_id = auth()->user()->id;
+        $topic->save();
 
-        return response()->json($topic->save());
+        return response()->json($topic);
     }
 
     /**
@@ -90,9 +92,14 @@ class TopicController extends Controller
     {
         $topic = Topic::find($id);
 
-        return response()->json([
-            'topic' => $topic
-        ]);
+        if (Auth::user()->can('update', $topic)) {
+
+            return response()->json([
+                'topic' => $topic
+            ]);
+        }
+
+        return response()->json(null,401);
     }
 
     /**
@@ -104,7 +111,22 @@ class TopicController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $topic = Topic::find($id);
+
+        if (Auth::user()->can('update', $topic)) {
+
+            $data = $request->validate([
+                'title' => 'required|min:5',
+                'content' => 'required|min:10'
+
+            ]);
+
+            $topic->update($data);
+            return response()->json([
+                'topic' => $topic,'status' => 'Success', 'Message' => 'Topic mis à jour'
+            ]);
+        }
+        return response()->json(null,401);
     }
 
     /**
@@ -115,6 +137,25 @@ class TopicController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $topic = Topic::find($id);
+
+        if (Auth::user()->can('delete', $topic)) {
+
+
+            if (count($topic->comments) > 0) {
+                foreach ($topic->comments as $comment) {
+                    if(count($comment->comments) > 0 ) {
+                        foreach ($comment->comments as $reply) {
+                            $reply->delete();
+                        }
+                    }
+                    $comment->delete();
+                }
+            }
+
+            $topic->delete();
+            return response()->json(['status' => 'Success', 'Message' => 'Topic supprimé']);
+        }
+        return response()->json(null,401);
     }
 }
