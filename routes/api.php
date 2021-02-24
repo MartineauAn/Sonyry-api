@@ -51,10 +51,10 @@ Route::middleware('jwt.auth')->group(function (){
     /**
      * CATEGORIES ROUTES
      */
+    Route::get('categorie/index', [CategorieController::class,'index']);
     Route::get('categorie/create',[CategorieController::class,'create']);
-    Route::post('categorie/store', [CategorieController::class, 'store']);
-    Route::get('categorie/index', [CategorieController::class, 'index']);
-    Route::get('categorie/{id}/destroy',[CategorieController::class, 'destroy']);
+    Route::post('categorie/store', [CategorieController::class,'store']);
+    Route::get('categorie/{id}/destroy',[CategorieController::class,'destroy']);
 
 });
 

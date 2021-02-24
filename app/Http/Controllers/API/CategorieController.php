@@ -50,21 +50,21 @@ class CategorieController extends Controller
     public function store(Request $request)
     {
 
-        request()->validate([
+        $request->validate([
             'libelle' => 'required|min:5',
         ]);
 
         $categorie = new Categorie();
 
-        $categorie->libelle = request()->input('libelle');
+        $categorie->libelle = $request->input('libelle');
 
         if (Auth::user()->can('update', $categorie)) {
 
             $categorie->save();
 
-            return redirect()->route('topics.index', $categorie->id);
+            return response()->json($categorie);
         }
-        return redirect()->route('home')->with('danger', 'Vous ne pouvez pas effectuer cette action');
+        return response()->json(null,401);
 
     }
 
