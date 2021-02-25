@@ -60,6 +60,14 @@ Route::middleware('jwt.auth')->group(function (){
     Route::post('categorie/store', [CategorieController::class,'store']);
     Route::delete('categorie/{id}/destroy',[CategorieController::class,'destroy']);
 
+
+    /**
+     * BLOCS ROUTES
+     */
+    Route::get('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'index']);
+    Route::post('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'store']);
+    //Route::apiResource('blocs',\App\Http\Controllers\API\BlocController::class);
+
     /**
      * COMMENTS ROUTES
      */
@@ -77,6 +85,7 @@ Route::middleware('jwt.auth')->group(function (){
     Route::get('/profil/friend/{id}/destroy',[FriendController::class,'destroy']);
     Route::get('/profil/friend/{id}/add', [FriendController::class,'add']);
     Route::get('/profil/friend/{id}/request',[FriendController::class,'request']);
+
 
     /**
      * INBOX ROUTES
