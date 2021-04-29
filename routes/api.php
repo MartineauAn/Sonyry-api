@@ -40,6 +40,12 @@ Route::group([
 Route::middleware('jwt.auth')->group(function (){
 
     /**
+     * DASHBOARD
+     */
+
+    Route::apiResource('dashboard' , \App\Http\Controllers\API\DashboardController::class);
+
+    /**
      *TOPIC ROUTES
      */
     route::get('topics',[\App\Http\Controllers\API\TopicController::class,'index']);
@@ -60,14 +66,6 @@ Route::middleware('jwt.auth')->group(function (){
 
 
     /**
-     * BLOCS ROUTES
-     */
-    Route::get('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'index']);
-    Route::put('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'update']);
-    Route::post('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'store']);
-    //Route::apiResource('blocs',\App\Http\Controllers\API\BlocController::class);
-
-    /**
      * COMMENTS ROUTES
      */
     Route::post('/comments/{id}/store', [CommentController::class,'store']);
@@ -84,6 +82,62 @@ Route::middleware('jwt.auth')->group(function (){
     Route::get('/profil/friend/{id}/request',[FriendController::class,'request']);
      */
 
+
+    /**
+     * BLOCS ROUTES
+     */
+    Route::get('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'index']);
+    Route::put('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'update']);
+    Route::post('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'store']);
+    Route::delete('blocs/{id}',[\App\Http\Controllers\API\BlocController::class , 'destroy']);
+
+
+    /**
+     * PAGES ROUTES
+     */
+
+    Route::post('pages/{id}',[\App\Http\Controllers\API\PageController::class , 'update']);
+    Route::get('pages/edit/{id}',[\App\Http\Controllers\API\PageController::class , 'edit']);
+    Route::apiResource('pages',\App\Http\Controllers\API\PageController::class);
+
+    /**
+     * COLLECTIONS
+     */
+
+
+    Route::post('collections/{id}' , [\App\Http\Controllers\API\CollectionController::class , 'update']);
+    Route::apiResource('collections', \App\Http\Controllers\API\CollectionController::class);
+
+    /**
+     * COLLECTION_PAGES ROUTES
+     */
+
+    Route::get('collectionPages/{id}', [\App\Http\Controllers\API\CollectionPageController::class , 'index']);
+    Route::post('collectionPages/{id}', [\App\Http\Controllers\API\CollectionPageController::class , 'store']);
+    Route::post('collectionPages/delete/{id}', [\App\Http\Controllers\API\CollectionPageController::class , 'destroy']);
+
+    /**
+     * GROUPS
+     */
+
+    Route::get('groups/exit/{id}' , [\App\Http\Controllers\API\GroupController::class , 'exit']);
+    Route::get('groups/{id}/kick/{user_id}' , [\App\Http\Controllers\API\GroupController::class , 'kick']);
+    Route::get('groups/{id}/invite/{user_id}' , [\App\Http\Controllers\API\GroupController::class , 'invite']);
+    Route::get('groups/{id}/kick/{notificationId}' , [\App\Http\Controllers\API\GroupController::class , 'accept']);
+    Route::apiResource('groups' , \App\Http\Controllers\API\GroupController::class);
+
+    /**
+     * SHARES
+     */
+
+    Route::get('shares/{id}' , [\App\Http\Controllers\API\ShareController::class , 'index']);
+    Route::post('shares' , [\App\Http\Controllers\API\ShareController::class , 'storeDirectory']);
+    Route::get('shares/directory/{id}' , [\App\Http\Controllers\API\ShareController::class , 'directory']);
+    Route::delete('shares/{id}/directory/{groupId}' , [\App\Http\Controllers\API\ShareController::class , 'destroyDirectory']);
+    Route::get('shares/links/{id}' , [\App\Http\Controllers\API\ShareController::class , 'links']);
+    Route::get('shares/pages/{id}' , [\App\Http\Controllers\API\ShareController::class , 'pages']);
+    Route::post('shares/pages' , [\App\Http\Controllers\API\ShareController::class , 'sharePage']);
+    Route::delete('shares/{id}' , [\App\Http\Controllers\API\ShareController::class , 'destroyShare']);
 });
 
 

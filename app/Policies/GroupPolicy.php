@@ -87,7 +87,7 @@ class GroupPolicy
     }
 
     public function exit(User $user, Group $group){
-        return UserGroup::where('user_id',$user->id)->where('group_id',$group->id)->get() !== null && $group->user_id != $user->id;
+        return UserGroup::where('user_id',$user->id)->where('group_id',$group->id)->get() != null && $group->user_id != $user->id;
     }
 
     public function invite(User $user, Group $group)

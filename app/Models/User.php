@@ -52,7 +52,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function groups()
     {
-        return $this->hasMany(Group::class);
+        return $this->belongsToMany(Group::class , 'user_groups');
     }
 
     public function notifications()
@@ -85,7 +85,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function roles()
     {
-        return $this->hasMany(RoleUser::class,'user_id');
+        return $this->belongsToMany(Role::class,'role_users');
     }
 
     public function topics()

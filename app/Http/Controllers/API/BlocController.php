@@ -193,6 +193,36 @@ class BlocController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $bloc = Bloc::find($id);
+
+        if (Auth::user()->can('delete', $bloc)) {
+            if ($bloc->type == 'video') {
+                $fileToDelete = 'public/bloc/' . $bloc->page_id . '/video/' . $bloc->content;
+
+                if (Storage::exists($fileToDelete)) {
+                    Storage::delete($fileToDelete);
+                }
+            } elseif ($bloc->type == 'image') {
+                $fileToDelete = 'public/bloc/' . $bloc->page_id . '/image/' . $bloc->content;
+
+                if (Storage::exists($fileToDelete)) {
+                    Storage::delete($fileToDelete);
+                }
+            }
+            elseif ($bloc->type == 'file'){
+                $fileToDelete = 'public/bloc/' . $bloc->page_id . '/file/' . $bloc->content;
+                if (Storage::exists($fileToDelete)) {
+                    Storage::delete($fileToDelete);
+                }
+            }
+
+            $bloc->delete();
+
+            $bloc->page;
+
+            return response()->json($bloc);
+        }
+
+        return response()->json(null , 401);
     }
 }
