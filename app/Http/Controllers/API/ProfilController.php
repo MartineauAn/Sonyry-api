@@ -140,6 +140,15 @@ class ProfilController extends Controller
 
         }
 
+        /**
+         * Activation relations
+         */
+        foreach ($groups as $group){
+            $group->user;
+            $group->group;
+        }
+
+
         return response()->json([
             'groups' => $groups,
             'friends' => $friends,

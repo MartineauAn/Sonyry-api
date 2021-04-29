@@ -7,6 +7,7 @@ use App\Models\Group;
 use App\Models\Inbox;
 use App\Models\Notification;
 use App\Models\UserGroup;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,7 +37,8 @@ class NotificationController extends Controller
         /** Delete the notification and the link of notification with the user */
         $notification->delete();
 
-        return redirect()->route('inbox.index');
+        return response()->json();
+
     }
 
     /**
