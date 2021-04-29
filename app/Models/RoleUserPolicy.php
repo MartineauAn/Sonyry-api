@@ -24,7 +24,7 @@ class RoleUserPolicy extends Model
 
     public function role($id){
         foreach(Auth::user()->roles as $role){
-            if ($role->role->id == $id){
+            if ($role->id == $id){
                 return true;
             }
         }
