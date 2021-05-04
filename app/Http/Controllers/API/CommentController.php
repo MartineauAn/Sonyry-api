@@ -17,7 +17,7 @@ class CommentController extends Controller
     public function store (Request $request,$id)
     {
         $request->validate([
-            'content' => 'required|min:5'
+            'content' => 'required'
         ]);
 
         $topic = Topic::find($id);
@@ -37,7 +37,7 @@ class CommentController extends Controller
     public function storeCommentReply(Request $request ,$id)
     {
         $request->validate([
-            'replyComment' => 'required|min:3'
+            'replyComment' => 'required'
         ]);
 
         $comment = Comment::find($id);

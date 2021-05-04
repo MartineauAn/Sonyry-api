@@ -51,7 +51,7 @@ class CategorieController extends Controller
     {
 
         $request->validate([
-            'libelle' => 'required|min:5',
+            'libelle' => 'required',
         ]);
 
         $categorie = new Categorie();

@@ -17,14 +17,19 @@ class TopicController extends Controller
      */
     public function index()
     {
-        $topics = Topic::latest('created_at')->simplepaginate(8);
-        $categories = Categorie::all() ;
+        $topics = Topic::latest('created_at')->with(['user' , 'categorie'])->simplepaginate(8);
+        $categories = Categorie::all();
 
         return response()->json([
             'topics' => $topics,
             'categories' => $categories
         ]);
 
+    }
+
+    public function byCategory($id)
+    {
+        return Topic::where('categorie_id',$this->current)->get();
     }
 
     /**
@@ -45,24 +50,18 @@ class TopicController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|min:5',
-            'content' => 'required|min:10',
-            'categorie_id'=>'required',
-        ]);
 
         $topic = new Topic();
         $topic->content = $request->input('content');
         $topic->title = $request->input('title');
         $topic->categorie_id = $request->input('categorie_id');
-        $topic->user_id = auth()->user()->id;
-        $topic->save();
+        $topic->user_id = Auth::id();
 
-        return response()->json($topic);
+        return response()->json($topic->save());
     }
 
     /**

@@ -52,6 +52,7 @@ Route::middleware('jwt.auth')->group(function (){
      *TOPIC ROUTES
      */
     route::get('topics',[\App\Http\Controllers\API\TopicController::class,'index']);
+    route::get('topics/category/{id}',[\App\Http\Controllers\API\TopicController::class,'byCategory']);
     route::get('topics/create',[\App\Http\Controllers\API\TopicController::class,'create']);
     route::post('topics/store',[\App\Http\Controllers\API\TopicController::class,'store']);
     route::get('topics/{id}/show',[\App\Http\Controllers\API\TopicController::class,'show']);
