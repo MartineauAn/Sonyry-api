@@ -16,14 +16,12 @@ class CategorieController extends Controller
      */
     public function index()
     {
-        $cat = new Categorie();
-        if (Auth::user()->can('viewAny', $cat)) {
-            $categories = Categorie::all();
-            return response()->json([
-                'categories' => $categories
-            ]);
-        }
-        return response()->json(null,401);
+
+        $categories = Categorie::all();
+        return response()->json([
+            'categories' => $categories
+        ]);
+
 
     }
 
@@ -38,7 +36,7 @@ class CategorieController extends Controller
         if (Auth::user()->can('update', $cat)) {
             return response()->json();
         }
-        return response()->json(null,401);
+        return response()->json(null, 401);
     }
 
     /**
@@ -64,7 +62,7 @@ class CategorieController extends Controller
 
             return response()->json($categorie);
         }
-        return response()->json(null,401);
+        return response()->json(null, 401);
 
     }
 
@@ -103,6 +101,6 @@ class CategorieController extends Controller
             return response()->json();
         }
 
-        return response()->json(null,401);
+        return response()->json(null, 401);
     }
 }

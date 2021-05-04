@@ -29,7 +29,7 @@ class TopicController extends Controller
 
     public function byCategory($id)
     {
-        return Topic::where('categorie_id',$this->current)->get();
+        return Topic::where('categorie_id',$id)->get();
     }
 
     /**
