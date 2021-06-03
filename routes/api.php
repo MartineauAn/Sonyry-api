@@ -110,6 +110,7 @@ Route::middleware('jwt.auth')->group(function (){
      * PAGES ROUTES
      */
 
+    Route::get('pages/{filter?}',[\App\Http\Controllers\API\PageController::class , 'index']);
     Route::post('pages/{id}',[\App\Http\Controllers\API\PageController::class , 'update']);
     Route::get('pages/edit/{id}',[\App\Http\Controllers\API\PageController::class , 'edit']);
     Route::apiResource('pages',\App\Http\Controllers\API\PageController::class);

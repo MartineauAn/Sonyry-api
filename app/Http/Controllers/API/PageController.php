@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Bloc;
 use App\Models\CollectionsPage;
 use App\Models\ImageAction;
+use App\Models\Keyword;
+use App\Models\KeywordPage;
 use App\Models\Page;
 use App\Models\ShareGroup;
 use Illuminate\Http\Request;
@@ -18,24 +20,38 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($filter =null)
     {
-        $pages = Auth()->user()->pages;
+        if ($filter != null){
+            $keywords = explode(';',$filter);
 
-        foreach ($pages as $page) {
-            $folder = 'pages/'.$page->user_id;
-            if ($page->image == 'default_page.png'){
-                $folder = 'default';
-            }
+            $keywords = Keyword::all()->whereIn('label' , $keywords)->pluck('id');
 
-            $page->updated_at_ = \Carbon\Carbon::parse($page->updated_at)->format('d/m/Y à H:h');
+            $keywordPages = KeywordPage::all()->whereIn('keyword_id' , $keywords)->pluck('page_id');
 
-            $page->link = 'storage/'.$folder.'/'.$page->image;
-
-
+            $pages = Page::all()->find($keywordPages);
+        }
+        else{
+            $pages = Auth()->user()->pages;
         }
 
-        return response()->json($pages);
+        if (count($pages) > 0){
+            foreach ($pages as $page) {
+                $folder = 'pages/'.$page->user_id;
+                if ($page->image == 'default_page.png'){
+                    $folder = 'default';
+                }
+
+                $page->updated_at_ = \Carbon\Carbon::parse($page->updated_at)->format('d/m/Y à H:h');
+
+                $page->link = 'storage/'.$folder.'/'.$page->image;
+
+                $page->keywords;
+
+            }
+        }
+
+        return response()->json(['pages' => $pages]);
     }
 
     /**
@@ -52,6 +68,7 @@ class PageController extends Controller
         $page->description = $request->input('description');
         $page->user_id = Auth::user()->id;
 
+
         if ($request->file('image')) {
             $image = $request->file('image');
 
@@ -66,6 +83,33 @@ class PageController extends Controller
         $page->image = $file;
 
         if($page->save()){
+
+            /** Ajout des keywords */
+            if ($request->input('keywords') != null) {
+                $keywords = explode(';', $request->input('keywords'));
+
+                foreach ($keywords as $keyword) {
+                    $search = Keyword::where('label', $keyword)->get();
+                    if (count($search) == 0) {
+                        $new = new Keyword();
+                        $new->label = $keyword;
+                        $new->save();
+
+                        $search = $new;
+                    } else {
+                        $search = $search[0];
+                    }
+
+                    $keywordPage = new KeywordPage();
+
+                    $keywordPage->page_id = $page->id;
+
+                    $keywordPage->keyword_id = $search->id;
+
+                    $keywordPage->save();
+                }
+            }
+
             return response()->json([]);
         }
         return response()->json([] , 500);
@@ -106,6 +150,8 @@ class PageController extends Controller
                 }
             }
 
+            $page->keywords;
+
             return response()->json($page);
         }
 
@@ -126,6 +172,8 @@ class PageController extends Controller
             $page->updated_at_ = \Carbon\Carbon::parse($page->updated_at)->format('d/m/Y à H:h');
 
             $page->link = 'storage/'.$folder.'/'.$page->image;
+
+            $page->keywords;
 
             return response()->json($page);
         }
@@ -173,6 +221,39 @@ class PageController extends Controller
                 $page->image = $file;
             }
 
+            /** Update des keywords */
+
+            if ($request->input('keywords') != null) {
+                $keywords = explode(';', $request->input('keywords'));
+
+                foreach ($keywords as $keyword) {
+                    $search = Keyword::where('label', $keyword)->get();
+                    if (count($search) == 0) {
+                        $new = new Keyword();
+                        $new->label = $keyword;
+                        $new->save();
+
+                        $search = $new;
+                    } else {
+                        $search = $search[0];
+                    }
+
+                    $keywordPageSearch = KeywordPage::where('page_id', $page->id)->where('keyword_id', $search->id)->get();
+
+                    if (count($keywordPageSearch) == 0){
+                        $keywordPage = new KeywordPage();
+
+                        $keywordPage->page_id = $page->id;
+
+                        $keywordPage->keyword_id = $search->id;
+
+                        $keywordPage->save();
+                    }
+
+                }
+            }
+
+
             $page->save();
 
             return response()->json($page);
@@ -215,6 +296,10 @@ class PageController extends Controller
             $imageAction = new ImageAction();
 
             $imageAction->deleteImage($fileToDelete);
+
+            /** Suppression des keywords */
+
+            KeywordPage::where('page_id' , $page->id)->delete();
 
             $page->delete();
 

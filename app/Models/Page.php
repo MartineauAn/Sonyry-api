@@ -20,5 +20,10 @@ class Page extends Model
         return $this->hasMany(Bloc::class);
     }
 
+    public function keywords()
+    {
+        return $this->belongsToMany(Keyword::class , 'keyword_pages');
+    }
+
 
 }
